@@ -1,0 +1,6 @@
+---
+
+pypi_packages:
+  - virtualenv
+  - yq
+  - xkcdpass

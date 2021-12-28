@@ -1,0 +1,15 @@
+---
+
+backups_dir: "{{ ansible_user_dir }}/.ansible/backups"
+
+bash_shell:
+  MacOSX: /usr/local/bin/bash
+
+python_user_path:
+  MacOSX: "{{ ansible_user_dir }}/Library/Python/3.{{ ansible_python['version']['minor'] }}/bin"
+
+pip:
+  MacOSX: "/usr/local/bin/pip3.{{ ansible_python['version']['minor'] }}"
+
+root_home:
+  MacOSX: /var/root

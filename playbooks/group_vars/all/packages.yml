@@ -1,0 +1,65 @@
+homebrew:
+  taps:
+    - hashicorp/tap
+    - helm/tap
+    - homebrew/cask
+    - homebrew/cask-fonts
+    - homebrew/core
+    - vmware-tanzu/carvel
+
+  formulas:
+    - bat
+    - bottom
+    - broot
+    - cmake
+    - ctags
+    - curl
+    - duti
+    - gettext
+    - go
+    - http-server
+    - httpie
+    - imagemagick
+    - jq
+    - kubernetes-cli
+    - lazydocker
+    - minikube
+    - node
+    - nmap
+    - openjdk
+    - openssl
+    - python3
+    - protobuf
+    - ripgrep
+    - rlwrap
+    - rustup
+    - sqlite
+    - stern
+    - stow
+    - telnet
+    - websocat
+    - yarn
+    - ytt
+    - wget
+    - zsh
+    - zsh-autosuggestions
+    - zsh-syntax-highlighting
+  casks:
+    - arduino
+    - clipy
+    - discord
+    - docker
+    - firefox
+    - google-chrome
+    - kitty
+    - rectangle
+    - slack
+    - spotify
+    - typora
+    - visual-studio-code
+    - vlc
+  mas:
+    - 937984704   # Amphetamine
+    - 1444383602  # Good Notes 5
+    - 768053424   # Gappling (svg viewer)
+

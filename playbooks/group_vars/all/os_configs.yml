@@ -1,0 +1,118 @@
+---
+
+defaults:
+  - domain: com.apple.TimeMachine
+    key: DoNotOfferNewDisksForBackup
+    name: Disable prompting to use new exteral drives as Time Machine volume
+    type: bool
+    value: 'true'
+  - domain: com.apple.desktopservices
+    key: DSDontWriteNetworkStores
+    name: Disable creation of .DS_Store files on network volumes
+    type: bool
+    value: 'true'
+  - domain: com.apple.finder
+    key: ShowExternalHardDrivesOnDesktop
+    name: Hide external hard drives on desktop
+    type: bool
+    value: 'false'
+  - domain: com.apple.finder
+    key: ShowHardDrivesOnDesktop
+    name: Hide hard drives on desktop
+    type: bool
+    value: 'false'
+  - domain: com.apple.finder
+    key: ShowRemovableMediaOnDesktop
+    name: Hide removable media on desktop
+    type: bool
+    value: 'false'
+  - domain: com.apple.finder
+    key: ShowMountedServersOnDesktop
+    name: Hide mounted servers on desktop
+    type: bool
+    value: 'false'
+  - domain: com.apple.finder
+    key: CreateDesktop
+    name: Hide icons on desktop
+    type: bool
+    value: 'false'
+  - domain: com.apple.finder
+    key: ShowStatusBar
+    name: Enable status bar in Finder
+    type: bool
+    value: 'true'
+  - domain: com.apple.finder
+    key: FXEnableExtensionChangeWarning
+    name: Disable file extension change warning
+    type: bool
+    value: 'false'
+  - domain: com.apple.finder
+    key: FXDefaultSearchScope
+    name: Set search scope to current folder
+    type: string
+    value: SCcf
+  - domain: com.apple.finder
+    key: NewWindowTarget
+    name: Set default Finder new window target
+    type: string
+    value: PfLo
+  - domain: com.apple.finder
+    key: NewWindowTargetPath
+    name: Set default Finder location to ~/
+    type: string
+    value: file://{{ ansible_user_dir }}/
+  - domain: com.apple.finder
+    key: autohide
+    name: Auto-hide the Dock
+    type: bool
+    value: 'true'
+  - domain: com.apple.safari
+    key: FXDefaultSearchScope
+    name: Enable Safari developer menu
+    type: bool
+    value: 'true'
+  - domain: com.apple.safari
+    key: WebKitDeveloperExtrasEnabledPreferenceKey
+    name: Enable Safari developer menu
+    type: bool
+    value: 'true'
+  - domain: com.apple.safari
+    key: com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled
+    name: Enable Safari developer menu
+    type: bool
+    value: 'true'
+  - domain: NSGlobalDomain
+    key: WebKitDeveloperExtras
+    name: Add context menu item to show web inspector
+    type: bool
+    value: 'true'
+  - domain: com.apple.dock
+    key: tilesize
+    name: Set Dock size
+    type: int
+    value: '32'
+  - domain: com.apple.screencapture
+    key: location
+    name: Save screenshots to ~/Pictures
+    value: '{{ ansible_user_dir }}/Pictures'
+  - domain: com.apple.screencapture
+    key: type
+    type: string
+    name: Set screencapture file type to PNG
+    value: png
+  - domain: com.apple.dock
+    key: expose-group-apps
+    name: Enable grouping windows by application
+    type: bool
+    value: 'true'
+  - domain: com.apple.SoftwareUpdate
+    key: ScheduleFrequency
+    name: Check for software updates weekly
+    type: int
+    value: '7'
+  - domain: com.apple.AppleMultitouchMouse
+    key: MouseButtonMode
+    name: Enable secondary click in external mouse
+    type: string
+    value: TwoButton
+

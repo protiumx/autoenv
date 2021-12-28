@@ -1,0 +1,15 @@
+---
+
+- name: Bootstrap localhost
+  hosts: localhost
+  tasks:
+    - name: Include system-specific package installations
+      ansible.builtin.include_tasks: "tasks/packages.yml"
+      tags: always
+
+    - name: Configure system settings
+      ansible.builtin.include_tasks: "tasks/system.yml"
+      tags: always
+
+- name: Import dotfile playbook
+  ansible.builtin.import_playbook: devenv.yml
