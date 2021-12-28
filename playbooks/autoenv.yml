@@ -1,9 +1,9 @@
 ---
 
-- name: Bootstrap localhost
+- name: Autoenv Tasks
   hosts: localhost
   tasks:
-    - name: Include system-specific package installations
+    - name: Include packages
       ansible.builtin.include_tasks: "tasks/packages.yml"
       tags: always
 

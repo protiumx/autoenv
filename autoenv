@@ -1,21 +1,30 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 set -o errexit
 
-REPO_URL=https://github.com/protiumx/autodev.git
-REPO_PATH="$HOME/.autodev"
+REPO_URL=https://github.com/protiumx/autoenv.git
+REPO_PATH="$HOME/.autoenv"
 
 reset_color=$(tput sgr 0)
 
-print() {
+info() {
   printf "%s[*] %s%s\n" "$(tput setaf 2)" "$1" "$reset_color"
 }
 
+err() {
+  printf "%s[*] %s%s\n" "$(tput setaf 1)" "$1" "$reset_color"
+}
+
+warn() {
+  printf "%s[*] %s%s\n" "$(tput setaf 3)" "$1" "$reset_color"
+}
+
+
 install_xcode() {
   if xcode-select -p > /dev/null; then
-    print "XCode Command Line Tools already installed"
+    warn "XCode Command Line Tools already installed"
   else
-    print "Installing XCode Command Line Tools..."
+    info "Installing XCode Command Line Tools..."
     xcode-select --install
     sudo xcodebuild -license accept
   fi
@@ -23,9 +32,9 @@ install_xcode() {
 
 install_homebrew() {
   if hash brew &>/dev/null; then
-    print "Homebrew already installed"
-    print "Updating brew"
-    brew update
+    warn "Homebrew already installed"
+    info "Updating brew"
+    #brew update
   else
     export HOMEBREW_CASK_OPTS="--appdir=/Applications"
     sudo --validate  # reset `sudo` timeout to use Homebrew install in noninteractive mode
@@ -35,63 +44,69 @@ install_homebrew() {
 
 install_brew_formula() {
   if brew list --formula | grep "$1" > /dev/null; then
-    print "Formula $1 is already installed"
+    warn "Formula $1 is already installed"
   else
-    print "Installing package < $1 >"
+    info "Installing package < $1 >"
     brew install "$1"
   fi
 }
 
-
-
 bootstrap() {
-  print "Bootstraping autoenv"
-  print "Installing xcode"
-  install_xcode
+  info "Bootstraping autoenv"
+  info "Installing xcode"
+  #install_xcode
 
-  print "Installing HomeBrew"
-  install_homebrew
+  info "Installing HomeBrew"
+  #install_homebrew
 
-  print "Installing python3"
-  install_brew_formula "python3"
-  install_brew_formula "git"
+  info "Installing python3"
+  #install_brew_formula "python3"
+  #install_brew_formula "git"
 
-  PATH="/usr/local/bin:$(/usr/local/bin/python3 -m site --user-base)/bin:$PATH"
+  PATH="/usr/local/bin:$(/opt/homebrew/bin/python3 -m site --user-base)/bin:$PATH"
   export PATH
 
-  print "Installing pip"
-  curl https://bootstrap.pypa.io/get-pip.py | python
+  info "Installing pip"
+  #curl https://bootstrap.pypa.io/get-pip.py | python3
 }
 
-print "Welcome to autoenv"
+info "Welcome to autoenv"
 
-[ -z "$SSH_PHRASE" ] && { echo "SSH_PHRASE not set."; exit 1 }
-[ -z "$GITHUB_TOKEN" ] && { echo "GITHUB_TOKEN not set."; exit 1 }
+if [[ -z "$SSH_PHRASE" ]]; then
+    err "SSH_PHRASE not set" 1>&2
+    exit 1
+fi
+
+if [[ -z "$GITHUB_TOKEN" ]]; then
+  err "GITHUB_TOKEN not set" 1>&2
+  exit 1
+fi
 
 read -p "Sign in on the App Store first. Press enter when ready."
 bootstrap
 
-print "Cloning autoenv repo from $REPO_URL into $REPO_PATH"
+info "Cloning autoenv repo from $REPO_URL into $REPO_PATH"
 git clone "$REPO_URL" "$REPO_PATH"
 
 cd "$REPO_PATH" >/dev/null
 
-print "Creating Virtual Env"
+info "Creating Virtual Env"
 python3 -m pip install --user virtualenv
 virtualenv venv
 . venv/bin/activate
 
-print "Installing Ansible"
+info "Installing Ansible"
 pip install ansible
 
-print "Setting up Ansible"
+info "Setting up Ansible"
 ansible-galaxy collection install -r setup/requirements.yml
 
-ANSIBLE_CONFIG=setup/setup.cfg ansible-playbook setup/site.yml \
+ANSIBLE_CONFIG=setup/setup.cfg ansible-playbook setup/main.yml \
   --extra-vars current_hostname="$(hostname -s)" --extra-vars current_email="$(id -un)@$(uname -n)" \
   --extra-vars ssh_passphrase="$SSH_PHRASE" \
   --extra-vars github_token="$GITHUB_TOKEN"
 
-print "Running Autoenv Playbook"
+info "Running Autoenv Playbook"
 
-ansible-playbook --ask-become-pass playbooks/autoenv.yml
+ansible-playbook -vv --ask-become-pass playbooks/autoenv.yml
+
