@@ -1,0 +1,37 @@
+---
+
+- name: Autoenv Ansible Setup
+  hosts: localhost
+
+  vars:
+    default_hostname: "{{ current_hostname if current_hostname is defined else '' }}"
+    default_email: "{{ current_email if current_email is defined else '' }}"
+
+  vars_prompt:
+    - name: hostname
+      prompt: Enter system hostname
+      private: false
+      default: "{{ default_hostname }}"
+    - name: email
+      prompt: Enter email address
+      private: false
+      default: "{{ default_email }}"
+    - name: ssh_key_types_to_generate
+      prompt: SSH key types to generate (dsa,ecdsa,ed25519,rsa|None)
+      private: false
+      default: "rsa,ed25519"
+    - name: manage_ssh_config
+      prompt: Manage SSH config (True|False)
+      private: false
+      default: true
+    - name: upload_ssh_key_github
+      prompt: Upload SSH key to Github (True|False)
+      private: false
+      default: true
+
+  tasks:
+    - name: Create inventory
+      ansible.builtin.template:
+        src: inventory.yml.j2
+        dest: "{{ ansible_user_dir }}/.ansible/inventory.yml"
+        mode: 0755

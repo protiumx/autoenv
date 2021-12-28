@@ -1,0 +1,97 @@
+#!/usr/bin/env sh
+
+set -o errexit
+
+REPO_URL=https://github.com/protiumx/autodev.git
+REPO_PATH="$HOME/.autodev"
+
+reset_color=$(tput sgr 0)
+
+print() {
+  printf "%s[*] %s%s\n" "$(tput setaf 2)" "$1" "$reset_color"
+}
+
+install_xcode() {
+  if xcode-select -p > /dev/null; then
+    print "XCode Command Line Tools already installed"
+  else
+    print "Installing XCode Command Line Tools..."
+    xcode-select --install
+    sudo xcodebuild -license accept
+  fi
+}
+
+install_homebrew() {
+  if hash brew &>/dev/null; then
+    print "Homebrew already installed"
+    print "Updating brew"
+    brew update
+  else
+    export HOMEBREW_CASK_OPTS="--appdir=/Applications"
+    sudo --validate  # reset `sudo` timeout to use Homebrew install in noninteractive mode
+    CI=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+  fi
+}
+
+install_brew_formula() {
+  if brew list --formula | grep "$1" > /dev/null; then
+    print "Formula $1 is already installed"
+  else
+    print "Installing package < $1 >"
+    brew install "$1"
+  fi
+}
+
+
+
+bootstrap() {
+  print "Bootstraping autoenv"
+  print "Installing xcode"
+  install_xcode
+
+  print "Installing HomeBrew"
+  install_homebrew
+
+  print "Installing python3"
+  install_brew_formula "python3"
+  install_brew_formula "git"
+
+  PATH="/usr/local/bin:$(/usr/local/bin/python3 -m site --user-base)/bin:$PATH"
+  export PATH
+
+  print "Installing pip"
+  curl https://bootstrap.pypa.io/get-pip.py | python
+}
+
+print "Welcome to autoenv"
+
+[ -z "$SSH_PHRASE" ] && { echo "SSH_PHRASE not set."; exit 1 }
+[ -z "$GITHUB_TOKEN" ] && { echo "GITHUB_TOKEN not set."; exit 1 }
+
+read -p "Sign in on the App Store first. Press enter when ready."
+bootstrap
+
+print "Cloning autoenv repo from $REPO_URL into $REPO_PATH"
+git clone "$REPO_URL" "$REPO_PATH"
+
+cd "$REPO_PATH" >/dev/null
+
+print "Creating Virtual Env"
+python3 -m pip install --user virtualenv
+virtualenv venv
+. venv/bin/activate
+
+print "Installing Ansible"
+pip install ansible
+
+print "Setting up Ansible"
+ansible-galaxy collection install -r setup/requirements.yml
+
+ANSIBLE_CONFIG=setup/setup.cfg ansible-playbook setup/site.yml \
+  --extra-vars current_hostname="$(hostname -s)" --extra-vars current_email="$(id -un)@$(uname -n)" \
+  --extra-vars ssh_passphrase="$SSH_PHRASE" \
+  --extra-vars github_token="$GITHUB_TOKEN"
+
+print "Running Autoenv Playbook"
+
+ansible-playbook --ask-become-pass playbooks/autoenv.yml

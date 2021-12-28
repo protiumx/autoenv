@@ -1,0 +1,21 @@
+---
+
+local:
+  hosts:
+    localhost
+  vars:
+    ansible_connection: local
+    email: {{ email }}
+    hostname: {{ hostname }}
+    manage_ssh_config: {{ manage_ssh_config }}
+    upload_ssh_key_github: {{ upload_ssh_key_github }}
+    system_type: desktop
+    desktop_env: macos
+
+    {%- if ssh_key_types_to_generate != 'None' %}
+
+    ssh_keys:
+  {% for item in ssh_keys['results'] %}
+  {{ item['stdout'] | indent(width=2, first=True) }}
+  {% endfor %}
+    {%- endif %}
