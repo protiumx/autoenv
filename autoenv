@@ -88,6 +88,7 @@ bootstrap
 info "Cloning autoenv repo from $REPO_URL into $REPO_PATH"
 git clone "$REPO_URL" "$REPO_PATH"
 
+info "Change path to $REPO_PATH"
 cd "$REPO_PATH" >/dev/null
 
 info "Creating Virtual Env"
@@ -109,4 +110,8 @@ ANSIBLE_CONFIG=setup/setup.cfg ansible-playbook setup/main.yml \
 info "Running Autoenv Playbook"
 
 ansible-playbook -vv --ask-become-pass playbooks/autoenv.yml
+
+info "Finishing installation"
+chmod +x post-install
+./post-install
 
