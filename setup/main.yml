@@ -30,6 +30,14 @@
       default: true
 
   tasks:
+    - name: Generate SSH key passphrases
+      vars:
+        passphrase: "{{ lookup('password', ansible_user_dir + '/.ssh/id_' + item + '.passphrase') }}"
+      ansible.builtin.command: "ansible-vault encrypt_string '{{ passphrase }}' --vault-password-file '{{ vault_password_file }}' --name {{ item }}"
+      loop: "{{ ssh_key_types_to_generate | split(',') }}"
+      when: "ssh_key_types_to_generate != 'None'"
+      register: ssh_keys
+
     - name: Create inventory
       ansible.builtin.template:
         src: inventory.yml.j2
