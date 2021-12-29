@@ -112,6 +112,5 @@ info "Running Autoenv Playbook"
 ansible-playbook -vv --ask-become-pass playbooks/autoenv.yml
 
 info "Finishing installation"
-chmod +x post-install
-./post-install
+sh ./post-install.sh
 
