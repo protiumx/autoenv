@@ -116,3 +116,30 @@ defaults:
     type: string
     value: TwoButton
 
+fileExtensions:
+  - ".c"
+  - ".cpp"
+  - ".js"
+  - ".jsx"
+  - ".ts"
+  - ".tsx"
+  - ".json"
+  - ".md"
+  - ".sql"
+  - ".html"
+  - ".css"
+  - ".scss"
+  - ".sass"
+  - ".py"
+  - ".sum"
+  - ".rs"
+  - ".go"
+  - ".sh"
+  - ".log"
+  - ".toml"
+  - ".yml"
+  - ".yaml"
+  - "public.plain-text"
+  - "public.unix-executable"
+  - "public.data"
+

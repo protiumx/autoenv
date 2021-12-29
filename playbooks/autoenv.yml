@@ -10,6 +10,51 @@
     - name: Configure system settings
       ansible.builtin.include_tasks: "tasks/system.yml"
       tags: always
+      when: false
 
-- name: Import dotfile playbook
-  ansible.builtin.import_playbook: devenv.yml
+    - name: Create ~/Development folder structure
+      ansible.builtin.file:
+        path: "{{ ansible_user_dir }}/Development/{{ item }}"
+        state: directory
+        mode: 0755
+      loop: ['protiumx']
+      tags: core
+
+    - name: Install Dotfiles
+      ansible.builtin.command: sh ~/.autoenv/dotfiles/install.sh
+
+    - name: Set VSCode as default editor
+      ansible.builtin.shell: |
+        local exts=("{{ fileExtensions | join(' ') }}")
+        for ext in $exts; do
+        duti -s com.microsoft.VSCode $ext all
+        done
+
+        exit 0
+      when: false
+
+    - name: Import nvim tasks
+      ansible.builtin.import_tasks: tasks/nvim.yml
+      tags: [nvim, core]
+      when: false
+
+    - name: Import ssh tasks
+      ansible.builtin.import_tasks: tasks/ssh.yml
+      tags: [ssh, core]
+
+    - name: Import GitHub tasks
+      ansible.builtin.import_tasks: tasks/github.yml
+      tags: github
+
+    - name: Install Python packages
+      ansible.builtin.pip:
+        executable: "{{ pip[ansible_distribution] }}"
+        name: "{{ pypi_packages }}"
+        extra_args: --user
+      tags: python
+      when: false
+
+    - name: Disable startup sound
+      shell: sudo nvram SystemAudioVolume=%01
+      tags: core
+      when: false
