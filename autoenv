@@ -89,9 +89,7 @@ info "Setting up Ansible"
 ansible-galaxy collection install -r setup/requirements.yml
 
 ANSIBLE_CONFIG=setup/setup.cfg ansible-playbook setup/main.yml \
-  --extra-vars current_hostname="$(hostname -s)" --extra-vars current_email="$(id -un)@$(uname -n)" \
-  --extra-vars ssh_passphrase="$SSH_PHRASE" \
-  --extra-vars github_token="$GITHUB_TOKEN"
+  --extra-vars current_hostname="$(hostname -s)" --extra-vars github_token="$GITHUB_TOKEN"
 
 info "Running autoenv Playbook"
 

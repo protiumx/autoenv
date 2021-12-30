@@ -5,7 +5,6 @@
 
   vars:
     default_hostname: "{{ current_hostname if current_hostname is defined else '' }}"
-    default_email: "{{ current_email if current_email is defined else '' }}"
 
   vars_prompt:
     - name: hostname
@@ -16,7 +15,6 @@
     - name: email
       prompt: Enter email address
       private: false
-      default: "{{ default_email }}"
 
     - name: ssh_key_types_to_generate
       prompt: SSH key types to generate (ed25519,rsa|None)
