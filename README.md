@@ -1,6 +1,6 @@
 # autoenv
 
-My `Ansible` automation to setup macOS laptos with a development environment.
+My [ansible](https://www.ansible.com/) playbooks to setup macOS laptos with a development environment.
 
 ## Running
 
