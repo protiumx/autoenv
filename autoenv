@@ -11,10 +11,6 @@ info() {
   printf "%s[*] %s%s\n" "$(tput setaf 2)" "$1" "$reset_color"
 }
 
-err() {
-  printf "%s[*] %s%s\n" "$(tput setaf 1)" "$1" "$reset_color"
-}
-
 warn() {
   printf "%s[*] %s%s\n" "$(tput setaf 3)" "$1" "$reset_color"
 }
@@ -33,8 +29,6 @@ install_xcode() {
 install_homebrew() {
   if hash brew &>/dev/null; then
     warn "Homebrew already installed"
-    info "Updating brew"
-    #brew update
   else
     export HOMEBREW_CASK_OPTS="--appdir=/Applications"
     sudo --validate  # reset `sudo` timeout to use Homebrew install in noninteractive mode
@@ -52,37 +46,29 @@ install_brew_formula() {
 }
 
 bootstrap() {
-  info "Bootstraping autoenv"
+  info "Bootstraping..."
   info "Installing xcode"
-  #install_xcode
+  install_xcode
 
   info "Installing HomeBrew"
-  #install_homebrew
+  install_homebrew
 
   info "Installing python3"
-  #install_brew_formula "python3"
-  #install_brew_formula "git"
+  install_brew_formula "python3"
+  
+  info "Installing git"
+  install_brew_formula "git"
 
   PATH="/usr/local/bin:$(/opt/homebrew/bin/python3 -m site --user-base)/bin:$PATH"
   export PATH
 
   info "Installing pip"
-  #curl https://bootstrap.pypa.io/get-pip.py | python3
+  curl https://bootstrap.pypa.io/get-pip.py | python3
 }
 
-info "Welcome to autoenv"
+info "======= autoenv =======\n"
 
-if [[ -z "$SSH_PHRASE" ]]; then
-    err "SSH_PHRASE not set" 1>&2
-    exit 1
-fi
-
-if [[ -z "$GITHUB_TOKEN" ]]; then
-  err "GITHUB_TOKEN not set" 1>&2
-  exit 1
-fi
-
-read -p "Sign in on the App Store first. Press enter when ready."
+read -p "Sign in on the App Store first. Press enter to continue:"
 bootstrap
 
 info "Cloning autoenv repo from $REPO_URL into $REPO_PATH"
@@ -107,10 +93,11 @@ ANSIBLE_CONFIG=setup/setup.cfg ansible-playbook setup/main.yml \
   --extra-vars ssh_passphrase="$SSH_PHRASE" \
   --extra-vars github_token="$GITHUB_TOKEN"
 
-info "Running Autoenv Playbook"
+info "Running autoenv Playbook"
 
-ansible-playbook -vv --ask-become-pass playbooks/autoenv.yml
+ansible-playbook -vvv --ask-become-pass playbooks/autoenv.yml
 
-info "Finishing installation"
+info "Running post-install\n"
 sh ./post-install.sh
 
+info "Finished"
