@@ -3,14 +3,13 @@
 - name: Autoenv Tasks
   hosts: localhost
   tasks:
-    - name: Include packages
+    - name: Import packages
       ansible.builtin.include_tasks: "tasks/packages.yml"
       tags: always
 
-    - name: Configure system settings
+    - name: Import system settings
       ansible.builtin.include_tasks: "tasks/system.yml"
       tags: always
-      when: false
 
     - name: Create ~/Development folder structure
       ansible.builtin.file:
@@ -18,10 +17,11 @@
         state: directory
         mode: 0755
       loop: ['protiumx']
-      tags: core
+      tags: [dev, core]
 
     - name: Install Dotfiles
       ansible.builtin.command: sh ~/.autoenv/dotfiles/install.sh
+      tags: dotfiles
 
     - name: Set VSCode as default editor
       ansible.builtin.shell: |
@@ -31,15 +31,15 @@
         done
 
         exit 0
-      when: false
+      tags: settings
 
     - name: Import nvim tasks
       ansible.builtin.import_tasks: tasks/nvim.yml
-      tags: [nvim, core]
-      when: false
+      tags: [nvim, settings]
 
     - name: Import ssh tasks
       ansible.builtin.import_tasks: tasks/ssh.yml
+      when: manage_ssh_config
       tags: [ssh, core]
 
     - name: Import GitHub tasks
@@ -51,10 +51,8 @@
         executable: "{{ pip[ansible_distribution] }}"
         name: "{{ pypi_packages }}"
         extra_args: --user
-      tags: python
-      when: false
+      tags: [core, python]
 
     - name: Disable startup sound
       shell: sudo nvram SystemAudioVolume=%01
-      tags: core
-      when: false
+      tags: settings
