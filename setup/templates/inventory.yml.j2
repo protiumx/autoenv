@@ -15,7 +15,7 @@ local:
     {%- if ssh_key_types_to_generate != 'None' %}
 
     ssh_keys:
-  {% for item in ssh_keys['results'] %}
-  {{ item['stdout'] | indent(width=2, first=True) }}
+  {% for item in {{ ssh_key_types_to_generate | split(',') }} %}
+  {{ item | indent(width=2, first=True) }}
   {% endfor %}
     {%- endif %}
