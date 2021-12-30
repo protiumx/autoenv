@@ -1,0 +1,25 @@
+{
+  "coc.preferences.snippets.enable": true,
+  "coc.preferences.formatOnSaveFiletypes": [
+    "typescript",
+    "typescriptreact",
+    "json",
+    "typescript.tsx",
+    "rust",
+    "python",
+    "go",
+    "html",
+    "cpp"
+  ],
+  "diagnostic.checkCurrentLine": true,
+  "diagnostic.virtualTextCurrentLineOnly": false,
+  "diagnostic.locationlistUpdate": true,
+  "diagnostic.refreshOnInsertMode": true,
+  "rust-analyzer.diagnostics.enable": true,
+  "rust-analyzer.inlayHints.chainingHints": true,
+  "rust-analyzer.inlayHints.typeHints": true,
+  "rust-analyzer.inlayHints.parameterHints": true,
+  "rust-analyzer.hoverActions.linksInHover": true,
+  "rust-analyzer.cargo.allFeatures": true,
+  "yaml.format.enable": true
+}
