@@ -12,6 +12,15 @@
   become: true
   tags: power_settings
 
+- name: Set macOS default settings
+  community.general.osx_defaults:
+    domain: "{{ item['domain'] }}"
+    key: "{{ item['key'] }}"
+    type: "{{ item['type'] | default(omit) }}"
+    value: "{{ item['value'] }}"
+  loop: "{{ defaults }}"
+  tags: system_settings
+
 - name: Unhide ~/Library
   ansible.builtin.shell: "chflags nohidden {{ ansible_user_dir }}/Library"
   changed_when: false
