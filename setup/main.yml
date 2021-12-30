@@ -27,12 +27,17 @@
       prompt: Manage SSH config (True|False)
       private: false
       default: true
-
+    
+    - name: ssh_phrase
+      prompt: Insert SSH phrase
+      private: false
+      
     - name: upload_ssh_key_github
       prompt: Upload SSH key to Github (True|False)
       private: false
       default: true
 
+  tasks:
     - name: Create inventory
       ansible.builtin.template:
         src: inventory.yml.j2

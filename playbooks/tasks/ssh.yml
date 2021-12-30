@@ -6,13 +6,13 @@
     state: directory
     mode: 0755
 
-- name: Create SSH key
+- name: Create SSH keys
   community.crypto.openssh_keypair:
-    path: "{{ ansible_user_dir }}/.ssh/id_{{ item['key'] }}"
+    path: "{{ ansible_user_dir }}/.ssh/id_{{ item }}"
     passphrase: "{{ ssh_passphrase }}"
-    type: "{{ item['key'] }}"
+    type: "{{ item }}"
     size: 4096
     comment: "{{ ansible_user_id }}@{{ ansible_hostname }} {{ ansible_date_time['date'] }}"
-  loop: "{{ ssh_keys | dict2items }}"
+  loop: "{{ ssh_key_types_to_generate | split(',') }}"
   loop_control:
-    label: "{{ item['key'] }}"
+    label: "{{ item }}"
