@@ -55,12 +55,12 @@ defaults:
     key: NewWindowTarget
     name: Set default Finder new window target
     type: string
-    value: PfLo
+    value: PfHm
   - domain: com.apple.finder
     key: NewWindowTargetPath
     name: Set default Finder location to ~/
     type: string
-    value: file://{{ ansible_user_dir }}/
+    value: file:///{{ ansible_user_dir }}/
   - domain: com.apple.finder
     key: autohide
     name: Auto-hide the Dock
